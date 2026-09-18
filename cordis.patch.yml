@@ -1,0 +1,35 @@
+# dsh-plugin-c2c bundle patch: mounts the Cache-to-Cache plugin into the host
+# composition of a dsh profile. The plugin registers its `c2c_*` tools into the
+# shared `tools` registry and one usage section into the global system prompt,
+# so every session of the profile can drive the local C2C runtime through
+# natural language.
+#
+# Install: `dsh plugin --profile <name> add <this package>` (npm or a local
+# path). The `dsh plugin` command pnpm-installs the package into the profile
+# and reconciles it into the profile's `dsh.profile.bundles` layer list.
+- insert:
+    - id: c2c
+      # Node-resolvable package name — must stay in sync with package.json
+      # `name`. Quoted because `@` is a reserved indicator in YAML and cannot
+      # open a plain scalar.
+      name: 'dsh-plugin-c2c'
+      config:
+        # Absolute path to the Python interpreter that owns the `rosetta`
+        # runtime. Empty auto-detects <repoRoot>/.venv/bin/python, then a
+        # Homebrew or system python3.
+        pythonPath: ''
+        # Root of the reproduced thu-nics/C2C checkout. The plugin looks for
+        # <repoRoot>/rosetta, <repoRoot>/.venv and <repoRoot>/models.
+        # Empty auto-detects ../c2c, ~/factor_digging/c2c, then ~/c2c. Set this
+        # when the checkout lives elsewhere. (Left empty so a fresh clone works
+        # without editing this file.)
+        repoRoot: ''
+        # TCP port the C2C daemon listens on (loopback only).
+        port: 8765
+        # Host interface for the daemon. Loopback by design: the daemon
+        # executes local GPU work with no authentication.
+        host: '127.0.0.1'
+        # Idle seconds before the daemon releases loaded weights.
+        idleUnloadSeconds: 900
+        # Seconds to wait for a cold model load before failing the call.
+        loadTimeoutSeconds: 600

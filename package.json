@@ -1,0 +1,47 @@
+{
+  "name": "dsh-plugin-c2c",
+  "version": "0.1.0",
+  "description": "Cache-to-Cache (C2C) for DeepSeek Harness: exposes the rosetta KV-cache fusion runtime (thu-nics/C2C) as the c2c_* tools through a local daemon",
+  "type": "module",
+  "main": "lib/index.js",
+  "bin": {
+    "dsh-c2c-setup": "python/dsh_c2c_setup.py"
+  },
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "python",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prepare": "node -e \"try{require('node:fs').chmodSync('python/dsh_c2c_setup.py',0o755)}catch{}\""
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cache-to-cache",
+    "c2c",
+    "kv-cache",
+    "llm",
+    "rosetta"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "devDependencies": {
+    "semver": "^7.8.5"
+  }
+}
